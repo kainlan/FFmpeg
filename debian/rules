@@ -13,7 +13,6 @@ PACKAGEVERSION := "$(ORIG_VERSION)-$(VERSION_SUFFIX)"
 CONFIG := --prefix=${TARGET_DIR} \
 	--target-os=linux \
 	--extra-libs='-lfftw3' \
-	--extra-version=Jellyfin \
 	--disable-doc \
 	--disable-ffplay \
 	--disable-ptx-compression \
@@ -104,7 +103,7 @@ override_dh_auto_clean:
 	dh_auto_clean || true
 
 override_dh_auto_install:
-	make -j1 install-data DESTDIR=/srv/build/ffmpeg/jellyfin-ffmpeg/debian/jellyfin-ffmpeg AM_UPDATE_INFO_DIR=no 
+	make -j1 install-data DESTDIR=/srv/build/ffmpeg/ffmpeg/debian/ffmpeg AM_UPDATE_INFO_DIR=no 
 
 override_dh_usrlocal:
 

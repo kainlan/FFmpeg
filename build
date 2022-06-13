@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 usage() {
-    echo -e "Build Jellyfin FFMPEG packages"
+    echo -e "Build FFMPEG packages"
     echo -e " $0 <release> <arch>"
     echo -e "Releases:          Arches:"
     echo -e " * buster           * amd64"
@@ -76,7 +76,7 @@ for dep in docker make mmv; do
     command -v ${dep} &>/dev/null || { echo "The command '${dep}' is required."; exit 1; }
 done
 
-image_name="jellyfin-ffmpeg-build-${cli_release}"
+image_name="ffmpeg-build-${cli_release}"
 package_temporary_dir="$( mktemp -d )"
 current_user="$( whoami )"
 

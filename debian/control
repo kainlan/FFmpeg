@@ -1,8 +1,8 @@
 Source: ffmpeg
 Section: video
 Priority: optional
-Maintainer: Kainlan Packaging Team <packaging@jellyfin.org>
-Uploaders: Kainlan Packaging Team <packaging@jellyfin.org>
+Maintainer: Kainlan Packaging Team <cjkolek@gmail.com>
+Uploaders: Kainlan Packaging Team <cjkolek@gmail.com>
 Rules-Requires-Root: no
 Homepage: https://ffmpeg.org/
 Standards-Version: 5.0.1
