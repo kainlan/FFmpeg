@@ -164,16 +164,16 @@ prepare_extra_amd64() {
     popd
     popd
 
-    # LIBVA-UTILS
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/intel/libva-utils
-    pushd libva-utils
-    ./autogen.sh
-    ./configure --prefix=${TARGET_DIR}
-    make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
-    echo "intel${TARGET_DIR}/bin/vainfo usr/lib/ffmpeg" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
+    # # LIBVA-UTILS
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/intel/libva-utils
+    # pushd libva-utils
+    # ./autogen.sh
+    # ./configure --prefix=${TARGET_DIR}
+    # make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
+    # echo "intel${TARGET_DIR}/bin/vainfo usr/lib/ffmpeg" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
 
     # INTEL-VAAPI-DRIVER
     pushd ${SOURCE_DIR}
