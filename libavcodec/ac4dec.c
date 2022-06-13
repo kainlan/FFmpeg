@@ -5871,12 +5871,13 @@ static const AVClass ac4_decoder_class = {
     .version    = LIBAVUTIL_VERSION_INT,
 };
 
-FFCodec ff_ac4_decoder = {
+const FFCodec ff_ac4_decoder = {
     .p.name           = "ac4",
     .p.long_name      = NULL_IF_CONFIG_SMALL("AC-4"),
     .p.type           = AVMEDIA_TYPE_AUDIO,
     .p.id             = AV_CODEC_ID_AC4,
-    .p.capabilities   = AV_CODEC_CAP_DR1 | AV_CODEC_CAP_CHANNEL_CONF,
+    .p.capabilities   = AV_CODEC_CAP_CHANNEL_CONF |
+						AV_CODEC_CAP_DR1,
     .p.priv_class     = &ac4_decoder_class,
     .priv_data_size = sizeof (AC4DecodeContext),
     .init           = ac4_decode_init,
