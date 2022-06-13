@@ -57,114 +57,114 @@ prepare_extra_common() {
     popd
     popd
 
-    # CHROMAPRINT
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/acoustid/chromaprint.git
-    pushd chromaprint
-    mkdir build
-    pushd build
-    cmake \
-        ${CMAKE_TOOLCHAIN_OPT} \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=ON \
-        -DBUILD_{TOOLS,TESTS}=OFF \
-        -DFFT_LIB=fftw3 \
-        ..
-    make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/chromaprint
-    echo "chromaprint${TARGET_DIR}/lib/libchromaprint.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
-    popd
+    # # CHROMAPRINT
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/acoustid/chromaprint.git
+    # pushd chromaprint
+    # mkdir build
+    # pushd build
+    # cmake \
+        # ${CMAKE_TOOLCHAIN_OPT} \
+        # -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} \
+        # -DCMAKE_BUILD_TYPE=Release \
+        # -DBUILD_SHARED_LIBS=ON \
+        # -DBUILD_{TOOLS,TESTS}=OFF \
+        # -DFFT_LIB=fftw3 \
+        # ..
+    # make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/chromaprint
+    # echo "chromaprint${TARGET_DIR}/lib/libchromaprint.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
+    # popd
 
-    # ZIMG
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/sekrit-twc/zimg
-    pushd zimg
-    ./autogen.sh
-    ./configure --prefix=${TARGET_DIR} ${CROSS_OPT}
-    make -j $(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/zimg
-    echo "zimg${TARGET_DIR}/lib/libzimg.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
+    # # ZIMG
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/sekrit-twc/zimg
+    # pushd zimg
+    # ./autogen.sh
+    # ./configure --prefix=${TARGET_DIR} ${CROSS_OPT}
+    # make -j $(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/zimg
+    # echo "zimg${TARGET_DIR}/lib/libzimg.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
 
-    # DAV1D
-    pushd ${SOURCE_DIR}
-    git clone -b 1.0.0 --depth=1 https://code.videolan.org/videolan/dav1d.git
-    if [ "${ARCH}" = "amd64" ]; then
-        nasmver="$(nasm -v | cut -d ' ' -f3)"
-        nasmminver="2.14.0"
-        if [ "$(printf '%s\n' "$nasmminver" "$nasmver" | sort -V | head -n1)" = "$nasmminver" ]; then
-            dav1d_asm=true
-        else
-            dav1d_asm=false
-        fi
-    else
-        dav1d_asm=true
-    fi
-    meson setup dav1d dav1d_build \
-        ${MESON_CROSS_OPT} \
-        --prefix=${TARGET_DIR} \
-        --libdir=lib \
-        --buildtype=release \
-        -Ddefault_library=shared \
-        -Denable_asm=$dav1d_asm \
-        -Denable_{tools,tests,examples}=false
-    meson configure dav1d_build
-    ninja -C dav1d_build install
-    cp ${TARGET_DIR}/lib/libdav1d.so* ${SOURCE_DIR}/dav1d
-    echo "dav1d/libdav1d.so* /usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    popd
+    # # DAV1D
+    # pushd ${SOURCE_DIR}
+    # git clone -b 1.0.0 --depth=1 https://code.videolan.org/videolan/dav1d.git
+    # if [ "${ARCH}" = "amd64" ]; then
+        # nasmver="$(nasm -v | cut -d ' ' -f3)"
+        # nasmminver="2.14.0"
+        # if [ "$(printf '%s\n' "$nasmminver" "$nasmver" | sort -V | head -n1)" = "$nasmminver" ]; then
+            # dav1d_asm=true
+        # else
+            # dav1d_asm=false
+        # fi
+    # else
+        # dav1d_asm=true
+    # fi
+    # meson setup dav1d dav1d_build \
+        # ${MESON_CROSS_OPT} \
+        # --prefix=${TARGET_DIR} \
+        # --libdir=lib \
+        # --buildtype=release \
+        # -Ddefault_library=shared \
+        # -Denable_asm=$dav1d_asm \
+        # -Denable_{tools,tests,examples}=false
+    # meson configure dav1d_build
+    # ninja -C dav1d_build install
+    # cp ${TARGET_DIR}/lib/libdav1d.so* ${SOURCE_DIR}/dav1d
+    # echo "dav1d/libdav1d.so* /usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # popd
 
-    # FDK-AAC-STRIPPED
-    pushd ${SOURCE_DIR}
-    git clone https://github.com/mstorsjo/fdk-aac
-    pushd fdk-aac
-    autoreconf -fiv
-    ./configure \
-        --disable-{static,silent-rules} \
-        --prefix=${TARGET_DIR} CFLAGS="-O3 -DNDEBUG" CXXFLAGS="-O3 -DNDEBUG" ${CROSS_OPT} 
-    make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/fdk-aac
-    echo "fdk-aac${TARGET_DIR}/lib/libfdk-aac.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
+    # # FDK-AAC-STRIPPED
+    # pushd ${SOURCE_DIR}
+    # git clone https://github.com/mstorsjo/fdk-aac
+    # pushd fdk-aac
+    # autoreconf -fiv
+    # ./configure \
+        # --disable-{static,silent-rules} \
+        # --prefix=${TARGET_DIR} CFLAGS="-O3 -DNDEBUG" CXXFLAGS="-O3 -DNDEBUG" ${CROSS_OPT} 
+    # make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/fdk-aac
+    # echo "fdk-aac${TARGET_DIR}/lib/libfdk-aac.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
 }
 
 # Prepare extra headers, libs and drivers for x86_64-linux-gnu
 prepare_extra_amd64() {
     # FFNVCODEC
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/FFmpeg/nv-codec-headers
-    pushd nv-codec-headers
-    make
-    make install
-    popd
-    popd
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/FFmpeg/nv-codec-headers
+    # pushd nv-codec-headers
+    # make
+    # make install
+    # popd
+    # popd
 
-    # AMF
-    # https://www.ffmpeg.org/general.html#AMD-AMF_002fVCE
-    git clone --depth=1 https://github.com/GPUOpen-LibrariesAndSDKs/AMF
-    pushd AMF/amf/public/include
-    mkdir -p /usr/include/AMF
-    mv * /usr/include/AMF
-    popd
+    # # AMF
+    # # https://www.ffmpeg.org/general.html#AMD-AMF_002fVCE
+    # git clone --depth=1 https://github.com/GPUOpen-LibrariesAndSDKs/AMF
+    # pushd AMF/amf/public/include
+    # mkdir -p /usr/include/AMF
+    # mv * /usr/include/AMF
+    # popd
 
 
 
-    # LIBVA
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/intel/libva
-    pushd libva
-    sed -i 's|getenv("LIBVA_DRIVERS_PATH")|"/usr/lib/ffmpeg/lib/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/dri:/usr/local/lib/dri"|g' va/va.c
-    sed -i 's|getenv("LIBVA_DRIVER_NAME")|getenv("LIBVA_DRIVER_NAME_JELLYFIN")|g' va/va.c
-    ./autogen.sh
-    ./configure \
-        --prefix=${TARGET_DIR} \
-        --disable-{glx,x11,wayland,docs}
-    make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
-    echo "intel${TARGET_DIR}/lib/libva.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
+    # # LIBVA
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/intel/libva
+    # pushd libva
+    # sed -i 's|getenv("LIBVA_DRIVERS_PATH")|"/usr/lib/ffmpeg/lib/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/dri:/usr/local/lib/dri"|g' va/va.c
+    # sed -i 's|getenv("LIBVA_DRIVER_NAME")|getenv("LIBVA_DRIVER_NAME_JELLYFIN")|g' va/va.c
+    # ./autogen.sh
+    # ./configure \
+        # --prefix=${TARGET_DIR} \
+        # --disable-{glx,x11,wayland,docs}
+    # make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
+    # echo "intel${TARGET_DIR}/lib/libva.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
 
     # LIBVA-UTILS
     pushd ${SOURCE_DIR}
@@ -177,145 +177,145 @@ prepare_extra_amd64() {
     popd
     popd
 
-    # INTEL-VAAPI-DRIVER
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/intel/intel-vaapi-driver
-    pushd intel-vaapi-driver
-    ./autogen.sh
-    ./configure LIBVA_DRIVERS_PATH=${TARGET_DIR}/lib/dri
-    make -j$(nproc) && make install
-    mkdir -p ${SOURCE_DIR}/intel/dri
-    cp ${TARGET_DIR}/lib/dri/i965*.so ${SOURCE_DIR}/intel/dri
-    echo "intel/dri/i965*.so usr/lib/ffmpeg/lib/dri" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
+    # # INTEL-VAAPI-DRIVER
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/intel/intel-vaapi-driver
+    # pushd intel-vaapi-driver
+    # ./autogen.sh
+    # ./configure LIBVA_DRIVERS_PATH=${TARGET_DIR}/lib/dri
+    # make -j$(nproc) && make install
+    # mkdir -p ${SOURCE_DIR}/intel/dri
+    # cp ${TARGET_DIR}/lib/dri/i965*.so ${SOURCE_DIR}/intel/dri
+    # echo "intel/dri/i965*.so usr/lib/ffmpeg/lib/dri" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
 
-    # GMMLIB
-    pushd ${SOURCE_DIR}
-    git clone https://github.com/intel/gmmlib
-    pushd gmmlib
-    mkdir build && pushd build
-    cmake -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} ..
-    make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
-    make install
-    echo "intel${TARGET_DIR}/lib/libigdgmm.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
-    popd
+    # # GMMLIB
+    # pushd ${SOURCE_DIR}
+    # git clone https://github.com/intel/gmmlib
+    # pushd gmmlib
+    # mkdir build && pushd build
+    # cmake -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} ..
+    # make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
+    # make install
+    # echo "intel${TARGET_DIR}/lib/libigdgmm.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
+    # popd
 
-    # MediaSDK
-    # Provides MSDK runtime (libmfxhw64.so.1) for 11th Gen Rocket Lake and older
-    # Provides MFX dispatcher (libmfx.so.1) for FFmpeg
-    pushd ${SOURCE_DIR}
-    git clone https://github.com/Intel-Media-SDK/MediaSDK
-    pushd MediaSDK
-    sed -i 's|MFX_PLUGINS_CONF_DIR "/plugins.cfg"|"/usr/lib/ffmpeg/lib/mfx/plugins.cfg"|g' api/mfx_dispatch/linux/mfxloader.cpp
-    mkdir build && pushd build
-    cmake -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} \
-          -DBUILD_SAMPLES=OFF \
-          -DBUILD_TUTORIALS=OFF \
-          ..
-    make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
-    echo "intel${TARGET_DIR}/lib/libmfx* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    echo "intel${TARGET_DIR}/lib/mfx/*.so usr/lib/jffmpeg/lib/mfx" >> ${DPKG_INSTALL_LIST}
-    echo "intel${TARGET_DIR}/share/mfx/plugins.cfg usr/lib/ffmpeg/lib/mfx" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
-    popd
+    # # MediaSDK
+    # # Provides MSDK runtime (libmfxhw64.so.1) for 11th Gen Rocket Lake and older
+    # # Provides MFX dispatcher (libmfx.so.1) for FFmpeg
+    # pushd ${SOURCE_DIR}
+    # git clone https://github.com/Intel-Media-SDK/MediaSDK
+    # pushd MediaSDK
+    # sed -i 's|MFX_PLUGINS_CONF_DIR "/plugins.cfg"|"/usr/lib/ffmpeg/lib/mfx/plugins.cfg"|g' api/mfx_dispatch/linux/mfxloader.cpp
+    # mkdir build && pushd build
+    # cmake -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} \
+          # -DBUILD_SAMPLES=OFF \
+          # -DBUILD_TUTORIALS=OFF \
+          # ..
+    # make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
+    # echo "intel${TARGET_DIR}/lib/libmfx* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # echo "intel${TARGET_DIR}/lib/mfx/*.so usr/lib/jffmpeg/lib/mfx" >> ${DPKG_INSTALL_LIST}
+    # echo "intel${TARGET_DIR}/share/mfx/plugins.cfg usr/lib/ffmpeg/lib/mfx" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
+    # popd
 
-    # ONEVPL-INTEL-GPU
-    # Provides VPL runtime (libmfx-gen.so.1.2) for 11th Gen Tiger Lake and newer
-    # Both MSDK and VPL runtime can be loaded by MFX dispatcher (libmfx.so.1)
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/oneapi-src/oneVPL-intel-gpu
-    pushd oneVPL-intel-gpu
-    mkdir build && pushd build
-    cmake -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} ..
-    make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
-    echo "intel${TARGET_DIR}/lib/libmfx-gen* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
-    popd
+    # # ONEVPL-INTEL-GPU
+    # # Provides VPL runtime (libmfx-gen.so.1.2) for 11th Gen Tiger Lake and newer
+    # # Both MSDK and VPL runtime can be loaded by MFX dispatcher (libmfx.so.1)
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/oneapi-src/oneVPL-intel-gpu
+    # pushd oneVPL-intel-gpu
+    # mkdir build && pushd build
+    # cmake -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} ..
+    # make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
+    # echo "intel${TARGET_DIR}/lib/libmfx-gen* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
+    # popd
 
-    # MEDIA-DRIVER
-    # Full Feature Build: ENABLE_KERNELS=ON(Default) ENABLE_NONFREE_KERNELS=ON(Default)
-    # Free Kernel Build: ENABLE_KERNELS=ON ENABLE_NONFREE_KERNELS=OFF
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/intel/media-driver
-    pushd media-driver
-    sed -i 's|find_package(X11)||g' media_softlet/media_top_cmake.cmake media_driver/media_top_cmake.cmake
-    mkdir build && pushd build
-    cmake -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} \
-          -DENABLE_KERNELS=ON \
-          -DENABLE_NONFREE_KERNELS=ON \
-          LIBVA_DRIVERS_PATH=${TARGET_DIR}/lib/dri \
-          ..
-    make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
-    echo "intel${TARGET_DIR}/lib/libigfxcmrt.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    mkdir -p ${SOURCE_DIR}/intel/dri
-    cp ${TARGET_DIR}/lib/dri/iHD*.so ${SOURCE_DIR}/intel/dri
-    echo "intel/dri/iHD*.so usr/lib/ffmpeg/lib/dri" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
-    popd
+    # # MEDIA-DRIVER
+    # # Full Feature Build: ENABLE_KERNELS=ON(Default) ENABLE_NONFREE_KERNELS=ON(Default)
+    # # Free Kernel Build: ENABLE_KERNELS=ON ENABLE_NONFREE_KERNELS=OFF
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/intel/media-driver
+    # pushd media-driver
+    # sed -i 's|find_package(X11)||g' media_softlet/media_top_cmake.cmake media_driver/media_top_cmake.cmake
+    # mkdir build && pushd build
+    # cmake -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} \
+          # -DENABLE_KERNELS=ON \
+          # -DENABLE_NONFREE_KERNELS=ON \
+          # LIBVA_DRIVERS_PATH=${TARGET_DIR}/lib/dri \
+          # ..
+    # make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
+    # echo "intel${TARGET_DIR}/lib/libigfxcmrt.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # mkdir -p ${SOURCE_DIR}/intel/dri
+    # cp ${TARGET_DIR}/lib/dri/iHD*.so ${SOURCE_DIR}/intel/dri
+    # echo "intel/dri/iHD*.so usr/lib/ffmpeg/lib/dri" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
+    # popd
 
-    # Vulkan Headers
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/KhronosGroup/Vulkan-Headers
-    pushd Vulkan-Headers
-    mkdir build && pushd build
-    cmake \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} ..
-    make -j$(nproc) && make install
-    popd
-    popd
-    popd
+    # # Vulkan Headers
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/KhronosGroup/Vulkan-Headers
+    # pushd Vulkan-Headers
+    # mkdir build && pushd build
+    # cmake \
+        # -DCMAKE_BUILD_TYPE=Release \
+        # -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} ..
+    # make -j$(nproc) && make install
+    # popd
+    # popd
+    # popd
 
-    # Vulkan ICD Loader
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/KhronosGroup/Vulkan-Loader
-    pushd Vulkan-Loader
-    mkdir build && pushd build
-    cmake \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} \
-        -DVULKAN_HEADERS_INSTALL_DIR="${TARGET_DIR}" \
-        -DCMAKE_INSTALL_SYSCONFDIR=${TARGET_DIR}/share \
-        -DCMAKE_INSTALL_DATADIR=${TARGET_DIR}/share \
-        -DCMAKE_INSTALL_LIBDIR=lib \
-        -DBUILD_TESTS=OFF \
-        -DBUILD_WSI_{XCB,XLIB,WAYLAND}_SUPPORT=ON ..
-    make -j$(nproc) && make install
-    cp ${TARGET_DIR}/lib/libvulkan.so* ${SOURCE_DIR}/Vulkan-Loader
-    echo "Vulkan-Loader/libvulkan.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
-    popd
+    # # Vulkan ICD Loader
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/KhronosGroup/Vulkan-Loader
+    # pushd Vulkan-Loader
+    # mkdir build && pushd build
+    # cmake \
+        # -DCMAKE_BUILD_TYPE=Release \
+        # -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} \
+        # -DVULKAN_HEADERS_INSTALL_DIR="${TARGET_DIR}" \
+        # -DCMAKE_INSTALL_SYSCONFDIR=${TARGET_DIR}/share \
+        # -DCMAKE_INSTALL_DATADIR=${TARGET_DIR}/share \
+        # -DCMAKE_INSTALL_LIBDIR=lib \
+        # -DBUILD_TESTS=OFF \
+        # -DBUILD_WSI_{XCB,XLIB,WAYLAND}_SUPPORT=ON ..
+    # make -j$(nproc) && make install
+    # cp ${TARGET_DIR}/lib/libvulkan.so* ${SOURCE_DIR}/Vulkan-Loader
+    # echo "Vulkan-Loader/libvulkan.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
+    # popd
 
-    # SHADERC
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/google/shaderc
-    pushd shaderc
-    ./utils/git-sync-deps
-    mkdir build && pushd build
-    cmake \
-        -GNinja \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} \
-        -DSHADERC_SKIP_{TESTS,EXAMPLES,COPYRIGHT_CHECK}=ON \
-        -DENABLE_{GLSLANG_BINARIES,EXCEPTIONS}=ON \
-        -DENABLE_CTEST=OFF \
-        -DSPIRV_SKIP_EXECUTABLES=ON \
-        -DSPIRV_TOOLS_BUILD_STATIC=ON \
-        -DBUILD_SHARED_LIBS=OFF ..
-    ninja -j$(nproc)
-    ninja install
-    cp ${TARGET_DIR}/lib/libshaderc_shared.so* ${SOURCE_DIR}/shaderc
-    echo "shaderc/libshaderc_shared* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
-    popd
+    # # SHADERC
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/google/shaderc
+    # pushd shaderc
+    # ./utils/git-sync-deps
+    # mkdir build && pushd build
+    # cmake \
+        # -GNinja \
+        # -DCMAKE_BUILD_TYPE=Release \
+        # -DCMAKE_INSTALL_PREFIX=${TARGET_DIR} \
+        # -DSHADERC_SKIP_{TESTS,EXAMPLES,COPYRIGHT_CHECK}=ON \
+        # -DENABLE_{GLSLANG_BINARIES,EXCEPTIONS}=ON \
+        # -DENABLE_CTEST=OFF \
+        # -DSPIRV_SKIP_EXECUTABLES=ON \
+        # -DSPIRV_TOOLS_BUILD_STATIC=ON \
+        # -DBUILD_SHARED_LIBS=OFF ..
+    # ninja -j$(nproc)
+    # ninja install
+    # cp ${TARGET_DIR}/lib/libshaderc_shared.so* ${SOURCE_DIR}/shaderc
+    # echo "shaderc/libshaderc_shared* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
+    # popd
 
     # MESA
     # Minimal libs for AMD VAAPI, AMD RADV and Intel ANV
