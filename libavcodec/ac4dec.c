@@ -5871,18 +5871,18 @@ static const AVClass ac4_decoder_class = {
     .version    = LIBAVUTIL_VERSION_INT,
 };
 
-AVCodec ff_ac4_decoder = {
-    .name           = "ac4",
-    .type           = AVMEDIA_TYPE_AUDIO,
-    .id             = AV_CODEC_ID_AC4,
-    .priv_class     = &ac4_decoder_class,
+FFCodec ff_ac4_decoder = {
+    .p.name           = "ac4",
+    .p.long_name      = NULL_IF_CONFIG_SMALL("AC-4"),
+    .p.type           = AVMEDIA_TYPE_AUDIO,
+    .p.id             = AV_CODEC_ID_AC4,
+    .p.capabilities   = AV_CODEC_CAP_DR1 | AV_CODEC_CAP_CHANNEL_CONF,
+    .p.priv_class     = &ac4_decoder_class,
     .priv_data_size = sizeof (AC4DecodeContext),
     .init           = ac4_decode_init,
     .close          = ac4_decode_end,
     .decode         = ac4_decode_frame,
     .flush          = ac4_flush,
-    .capabilities   = AV_CODEC_CAP_DR1 | AV_CODEC_CAP_CHANNEL_CONF,
-    .long_name      = NULL_IF_CONFIG_SMALL("AC-4"),
-    .sample_fmts    = (const enum AVSampleFormat[]) { AV_SAMPLE_FMT_FLTP,
+    .p.sample_fmts    = (const enum AVSampleFormat[]) { AV_SAMPLE_FMT_FLTP,
                                                       AV_SAMPLE_FMT_NONE },
 };
