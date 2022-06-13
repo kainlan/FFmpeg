@@ -23,7 +23,7 @@ ENV CFLAGS="-I${TARGET_DIR}/include $CFLAGS"
 RUN apt-get update \
  && yes | apt-get install -y apt-transport-https curl ninja-build debhelper gnupg wget devscripts mmv equivs git nasm pkg-config subversion dh-autoreconf libpciaccess-dev libwayland-dev libx11-dev libx11-xcb-dev libxcb-dri2-0-dev libxcb-dri3-dev libxcb-present-dev libxcb-shm0-dev libxcb-sync-dev libxshmfence-dev libxext-dev libxfixes-dev libxcb1-dev libxrandr-dev libzstd-dev libelf-dev libudev-dev python3-pip python3-mako zip unzip tar flex bison \
  autoconf automake build-essential libass-dev libtool pkg-config texinfo zlib1g-dev libva-dev cmake mercurial libdrm-dev \
- libvorbis-dev libogg-dev git libx11-dev libperl-dev libpciaccess-dev libpciaccess0 xorg-dev intel-gpu-tools intel-media-va-driver-non-free opencl-headers libwayland-dev \
+ libvorbis-dev libogg-dev git libx11-dev libperl-dev libpciaccess-dev libpciaccess0 xorg-dev intel-gpu-tools opencl-headers libwayland-dev \
  xutils-dev ocl-icd-* libssl-dev libx265-dev libx264-dev nasm libnuma-dev libx11-xcb-dev libmfx-dev libxcb-dri3-dev libxcb-present-dev \
  libargtable2-dev libavformat-dev libsdl1.2-dev \
  libglew-dev libglfw3-dev gcc libcurl4-gnutls-dev tesseract-ocr libtesseract-dev libleptonica-dev \
