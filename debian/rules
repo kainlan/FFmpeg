@@ -21,7 +21,7 @@ CONFIG := --prefix=${TARGET_DIR} \
 	--disable-sdl2 \
 	--disable-xlib \
 	--enable-lto \
-	--enable-gpl \
+	--enable-nonfree \
 	--enable-version3 \
 	--enable-static \
 	--enable-gmp \
