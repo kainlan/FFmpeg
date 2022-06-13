@@ -156,11 +156,11 @@ prepare_extra_amd64() {
     git clone --depth=1 https://github.com/intel/libva
     pushd libva
     sed -i 's|getenv("LIBVA_DRIVERS_PATH")|"/usr/lib/ffmpeg/lib/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/dri:/usr/local/lib/dri"|g' va/va.c
-    sed -i 's|getenv("LIBVA_DRIVER_NAME")|getenv("LIBVA_DRIVER_NAME_JELLYFIN")|g' va/va.c
+    sed -i 's|getenv("LIBVA_DRIVER_NAME")|g' va/va.c
     ./autogen.sh
     ./configure \
         --prefix=${TARGET_DIR} \
-        --disable-{glx,x11,wayland,docs,drm}
+        --disable-{glx,x11,wayland,docs}
     make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
     echo "intel${TARGET_DIR}/lib/libva.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
     popd
