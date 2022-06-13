@@ -149,22 +149,7 @@ prepare_extra_amd64() {
     mv * /usr/include/AMF
     popd
 
-    # LIBDRM
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://gitlab.freedesktop.org/mesa/drm.git
-    meson setup drm drm_build \
-        --prefix=${TARGET_DIR} \
-        --libdir=lib \
-        --buildtype=release \
-        -D{amdgpu,radeon,intel,udev}=true \
-        -D{libkms,valgrind,freedreno,vc4,vmwgfx,nouveau,man-pages}=false
-    meson configure drm_build
-    ninja -C drm_build install
-    cp ${TARGET_DIR}/lib/libdrm*.so* ${SOURCE_DIR}/drm
-    cp ${TARGET_DIR}/share/libdrm/*.ids ${SOURCE_DIR}/drm
-    echo "drm/libdrm*.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    echo "drm/*.ids usr/lib/ffmpeg/share/libdrm" >> ${DPKG_INSTALL_LIST}
-    popd
+
 
     # LIBVA
     pushd ${SOURCE_DIR}
@@ -175,11 +160,9 @@ prepare_extra_amd64() {
     ./autogen.sh
     ./configure \
         --prefix=${TARGET_DIR} \
-        --enable-drm \
         --disable-{glx,x11,wayland,docs}
     make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
     echo "intel${TARGET_DIR}/lib/libva.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    echo "intel${TARGET_DIR}/lib/libva-drm.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
     popd
     popd
 
