@@ -5883,7 +5883,7 @@ const FFCodec ff_ac4_decoder = {
     .priv_data_size = sizeof (AC4DecodeContext),
     .init           = ac4_decode_init,
     .close          = ac4_decode_end,
-    .decode         = ac4_decode_frame,
+	FF_CODEC_DECODE_CB(ac4_decode_frame),
     .flush          = ac4_flush,
     .p.sample_fmts    = (const enum AVSampleFormat[]) { AV_SAMPLE_FMT_FLTP,
                                                       AV_SAMPLE_FMT_NONE },
