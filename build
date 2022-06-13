@@ -10,6 +10,7 @@ usage() {
     echo -e " * focal"
     echo -e " * impish"
     echo -e " * jammy"
+
 }
 
 if [[ -z ${1} ]]; then
