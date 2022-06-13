@@ -160,7 +160,7 @@ prepare_extra_amd64() {
     ./autogen.sh
     ./configure \
         --prefix=${TARGET_DIR} \
-        --disable-{glx,x11,wayland,docs}
+        --disable-{glx,x11,wayland,docs,drm}
     make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
     echo "intel${TARGET_DIR}/lib/libva.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
     popd

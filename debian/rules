@@ -28,7 +28,6 @@ CONFIG := --prefix=${TARGET_DIR} \
 	--enable-gmp \
 	--enable-gnutls \
 	--enable-chromaprint \
-	--enable-libdrm \
 	--enable-libass \
 	--enable-libfreetype \
 	--enable-libfribidi \
