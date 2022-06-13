@@ -118,14 +118,14 @@ prepare_extra_common() {
 
     # FDK-AAC-STRIPPED
     pushd ${SOURCE_DIR}
-    git clone https://github.com/mstorsjo/fdk-aac
-    pushd fdk-aac
+    git clone -b stripped4 --depth=1 https://gitlab.freedesktop.org/wtaymans/fdk-aac-stripped.git
+    pushd fdk-aac-stripped
     autoreconf -fiv
     ./configure \
         --disable-{static,silent-rules} \
         --prefix=${TARGET_DIR} CFLAGS="-O3 -DNDEBUG" CXXFLAGS="-O3 -DNDEBUG" ${CROSS_OPT} 
-    make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/fdk-aac
-    echo "fdk-aac${TARGET_DIR}/lib/libfdk-aac.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/fdk-aac-stripped
+    echo "fdk-aac-stripped${TARGET_DIR}/lib/libfdk-aac.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
     popd
     popd
 }
@@ -149,7 +149,22 @@ prepare_extra_amd64() {
     mv * /usr/include/AMF
     popd
 
-
+	# LIBDRM
+    pushd ${SOURCE_DIR}
+    git clone -b libdrm-2.4.110 --depth=1 https://gitlab.freedesktop.org/mesa/drm.git
+    meson setup drm drm_build \
+        --prefix=${TARGET_DIR} \
+        --libdir=lib \
+        --buildtype=release \
+        -D{amdgpu,radeon,intel,udev}=true \
+        -D{libkms,valgrind,freedreno,vc4,vmwgfx,nouveau,man-pages}=false
+    meson configure drm_build
+    ninja -C drm_build install
+    cp ${TARGET_DIR}/lib/libdrm*.so* ${SOURCE_DIR}/drm
+    cp ${TARGET_DIR}/share/libdrm/*.ids ${SOURCE_DIR}/drm
+    echo "drm/libdrm*.so* usr/lib/jellyfin-ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    echo "drm/*.ids usr/lib/jellyfin-ffmpeg/share/libdrm" >> ${DPKG_INSTALL_LIST}
+    popd
 
     # LIBVA
     pushd ${SOURCE_DIR}
@@ -158,22 +173,24 @@ prepare_extra_amd64() {
     ./autogen.sh
     ./configure \
         --prefix=${TARGET_DIR} \
+		--enable-drm \
         --disable-{glx,x11,wayland,docs}
     make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
     echo "intel${TARGET_DIR}/lib/libva.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    echo "intel${TARGET_DIR}/lib/libva-drm.so* usr/lib/jellyfin-ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
     popd
     popd
 
-    # # LIBVA-UTILS
-    # pushd ${SOURCE_DIR}
-    # git clone --depth=1 https://github.com/intel/libva-utils
-    # pushd libva-utils
-    # ./autogen.sh
-    # ./configure --prefix=${TARGET_DIR}
-    # make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
-    # echo "intel${TARGET_DIR}/bin/vainfo usr/lib/ffmpeg" >> ${DPKG_INSTALL_LIST}
-    # popd
-    # popd
+    # LIBVA-UTILS
+    pushd ${SOURCE_DIR}
+    git clone --depth=1 https://github.com/intel/libva-utils
+    pushd libva-utils
+    ./autogen.sh
+    ./configure --prefix=${TARGET_DIR}
+    make -j$(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/intel
+    echo "intel${TARGET_DIR}/bin/vainfo usr/lib/ffmpeg" >> ${DPKG_INSTALL_LIST}
+    popd
+    popd
 
     # INTEL-VAAPI-DRIVER
     pushd ${SOURCE_DIR}
@@ -317,65 +334,65 @@ prepare_extra_amd64() {
 
     # MESA
     # Minimal libs for AMD VAAPI, AMD RADV and Intel ANV
-    # if [[ $( lsb_release -c -s ) != "bionic" ]]; then
-        # # llvm >= 11
-        # apt-get install -y llvm-11-dev
-        # pushd ${SOURCE_DIR}
-        # git clone --depth=1 https://gitlab.freedesktop.org/mesa/mesa.git
-        # # disable the broken hevc packed header
-        # MESA_VA_PIC=mesa/src/gallium/frontends/va/picture.c
-        # MESA_VA_CONF=mesa/src/gallium/frontends/va/config.c
-        # sed -i 's|handleVAEncPackedHeaderParameterBufferType(context, buf);||g' ${MESA_VA_PIC}
-        # sed -i 's|handleVAEncPackedHeaderDataBufferType(context, buf);||g' ${MESA_VA_PIC}
-        # sed -i 's|if (u_reduce_video_profile(ProfileToPipe(profile)) == PIPE_VIDEO_FORMAT_HEVC)||g' ${MESA_VA_CONF}
-        # sed -i 's|value \|= VA_ENC_PACKED_HEADER_SEQUENCE;||g' ${MESA_VA_CONF}
-        # meson setup mesa mesa_build \
-            # --prefix=${TARGET_DIR} \
-            # --libdir=lib \
-            # --buildtype=release \
-            # --wrap-mode=nofallback \
-            # -Db_ndebug=true \
-            # -Db_lto=false \
-            # -Dplatforms=x11\
-            # -Ddri-drivers=[] \
-            # -Dgallium-drivers=radeonsi \
-            # -Dvulkan-drivers=amd,intel \
-            # -Dvulkan-layers=device-select,overlay \
-            # -Ddri3=enabled \
-            # -Degl=disabled \
-            # -Dgallium-{extra-hud,nine}=false \
-            # -Dgallium-{omx,vdpau,xa,xvmc,opencl}=disabled \
-            # -Dgallium-va=enabled \
-            # -Dgbm=disabled \
-            # -Dgles1=disabled \
-            # -Dgles2=disabled \
-            # -Dopengl=false \
-            # -Dglvnd=false \
-            # -Dglx=disabled \
-            # -Dlibunwind=disabled \
-            # -Dllvm=enabled \
-            # -Dlmsensors=disabled \
-            # -Dosmesa=false \
-            # -Dshared-glapi=disabled \
-            # -Dvalgrind=disabled \
-            # -Dtools=[] \
-            # -Dzstd=enabled \
-            # -Dmicrosoft-clc=disabled
-        # meson configure mesa_build
-        # ninja -C mesa_build install
-        # cp ${TARGET_DIR}/lib/libvulkan_*.so ${SOURCE_DIR}/mesa
-        # cp ${TARGET_DIR}/lib/libVkLayer_MESA*.so ${SOURCE_DIR}/mesa
-        # cp ${TARGET_DIR}/lib/dri/radeonsi_drv_video.so ${SOURCE_DIR}/mesa
-        # echo "mesa/lib*.so usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-        # echo "mesa/radeonsi_drv_video.so usr/lib/ffmpeg/lib/dri" >> ${DPKG_INSTALL_LIST}
-        # cp ${TARGET_DIR}/share/drirc.d/*.conf ${SOURCE_DIR}/mesa
-        # echo "mesa/*defaults.conf usr/lib/ffmpeg/share/drirc.d" >> ${DPKG_INSTALL_LIST}
-        # cp ${TARGET_DIR}/share/vulkan/{icd.d,explicit_layer.d,implicit_layer.d}/*.json ${SOURCE_DIR}/mesa
-        # echo "mesa/*icd.x86_64.json usr/lib/ffmpeg/share/vulkan/icd.d" >> ${DPKG_INSTALL_LIST}
-        # echo "mesa/*overlay.json usr/lib/ffmpeg/share/vulkan/explicit_layer.d" >> ${DPKG_INSTALL_LIST}
-        # echo "mesa/*device_select.json usr/lib/ffmpeg/share/vulkan/implicit_layer.d" >> ${DPKG_INSTALL_LIST}
-        # popd
-    # fi
+    if [[ $( lsb_release -c -s ) != "bionic" ]]; then
+        # llvm >= 11
+        apt-get install -y llvm-11-dev
+        pushd ${SOURCE_DIR}
+        git clone --depth=1 https://gitlab.freedesktop.org/mesa/mesa.git
+        # disable the broken hevc packed header
+        MESA_VA_PIC=mesa/src/gallium/frontends/va/picture.c
+        MESA_VA_CONF=mesa/src/gallium/frontends/va/config.c
+        sed -i 's|handleVAEncPackedHeaderParameterBufferType(context, buf);||g' ${MESA_VA_PIC}
+        sed -i 's|handleVAEncPackedHeaderDataBufferType(context, buf);||g' ${MESA_VA_PIC}
+        sed -i 's|if (u_reduce_video_profile(ProfileToPipe(profile)) == PIPE_VIDEO_FORMAT_HEVC)||g' ${MESA_VA_CONF}
+        sed -i 's|value \|= VA_ENC_PACKED_HEADER_SEQUENCE;||g' ${MESA_VA_CONF}
+        meson setup mesa mesa_build \
+            --prefix=${TARGET_DIR} \
+            --libdir=lib \
+            --buildtype=release \
+            --wrap-mode=nofallback \
+            -Db_ndebug=true \
+            -Db_lto=false \
+            -Dplatforms=x11\
+            -Ddri-drivers=[] \
+            -Dgallium-drivers=radeonsi \
+            -Dvulkan-drivers=amd,intel \
+            -Dvulkan-layers=device-select,overlay \
+            -Ddri3=enabled \
+            -Degl=disabled \
+            -Dgallium-{extra-hud,nine}=false \
+            -Dgallium-{omx,vdpau,xa,xvmc,opencl}=disabled \
+            -Dgallium-va=enabled \
+            -Dgbm=disabled \
+            -Dgles1=disabled \
+            -Dgles2=disabled \
+            -Dopengl=false \
+            -Dglvnd=false \
+            -Dglx=disabled \
+            -Dlibunwind=disabled \
+            -Dllvm=enabled \
+            -Dlmsensors=disabled \
+            -Dosmesa=false \
+            -Dshared-glapi=disabled \
+            -Dvalgrind=disabled \
+            -Dtools=[] \
+            -Dzstd=enabled \
+            -Dmicrosoft-clc=disabled
+        meson configure mesa_build
+        ninja -C mesa_build install
+        cp ${TARGET_DIR}/lib/libvulkan_*.so ${SOURCE_DIR}/mesa
+        cp ${TARGET_DIR}/lib/libVkLayer_MESA*.so ${SOURCE_DIR}/mesa
+        cp ${TARGET_DIR}/lib/dri/radeonsi_drv_video.so ${SOURCE_DIR}/mesa
+        echo "mesa/lib*.so usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+        echo "mesa/radeonsi_drv_video.so usr/lib/ffmpeg/lib/dri" >> ${DPKG_INSTALL_LIST}
+        cp ${TARGET_DIR}/share/drirc.d/*.conf ${SOURCE_DIR}/mesa
+        echo "mesa/*defaults.conf usr/lib/ffmpeg/share/drirc.d" >> ${DPKG_INSTALL_LIST}
+        cp ${TARGET_DIR}/share/vulkan/{icd.d,explicit_layer.d,implicit_layer.d}/*.json ${SOURCE_DIR}/mesa
+        echo "mesa/*icd.x86_64.json usr/lib/ffmpeg/share/vulkan/icd.d" >> ${DPKG_INSTALL_LIST}
+        echo "mesa/*overlay.json usr/lib/ffmpeg/share/vulkan/explicit_layer.d" >> ${DPKG_INSTALL_LIST}
+        echo "mesa/*device_select.json usr/lib/ffmpeg/share/vulkan/implicit_layer.d" >> ${DPKG_INSTALL_LIST}
+        popd
+    fi
 
     # LIBPLACEBO
     pushd ${SOURCE_DIR}
