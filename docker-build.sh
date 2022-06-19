@@ -521,14 +521,14 @@ pushd ${SOURCE_DIR}
 yes | mk-build-deps -i ${DEP_ARCH_OPT}
 dpkg-buildpackage -b -rfakeroot -us -uc ${BUILD_ARCH_OPT}
 
-# apt-get -y install libargtable2-dev libavformat-dev libsdl1.2-dev
-# mkdir comskipsrc
-# cd comskipsrc 
-# git clone -b kainlan-comskip https://github.com/kainlan/Comskip
-# cd Comskip
-# ./autogen.sh
-# PKG_CONFIG_PATH="/usr/lib/ffmpeg/lib:/usr/lib/ffmpeg/lib/mfx/pkgconfig" ./configure
-# dpkg-buildpackage -b -rfakeroot -us -uc
+apt-get -y install libargtable2-dev libavformat-dev libsdl1.2-dev
+mkdir comskipsrc
+cd comskipsrc 
+git clone -b kainlan-comskip https://github.com/kainlan/Comskip
+cd Comskip
+./autogen.sh
+PKG_CONFIG_PATH="/usr/lib/ffmpeg/lib" ./configure
+make
 
 
 popd
@@ -536,4 +536,5 @@ popd
 # Move the artifacts out
 mkdir -p ${ARTIFACT_DIR}/deb
 mv /ffmpeg{,5}_* ${ARTIFACT_DIR}/deb/
+mv /comskipsrc/Comskip/comskip{,5}_* ${ARTIFACT_DIR}/deb/
 chown -Rc $(stat -c %u:%g ${ARTIFACT_DIR}) ${ARTIFACT_DIR}
