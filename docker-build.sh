@@ -536,5 +536,5 @@ popd
 # Move the artifacts out
 mkdir -p ${ARTIFACT_DIR}/deb
 mv /ffmpeg{,5}_* ${ARTIFACT_DIR}/deb/
-mv /comskipsrc/Comskip/comskip{,5}_* ${ARTIFACT_DIR}/deb/
+#mv /comskipsrc/Comskip/comskip{,5}_* ${ARTIFACT_DIR}/deb/
 chown -Rc $(stat -c %u:%g ${ARTIFACT_DIR}) ${ARTIFACT_DIR}
