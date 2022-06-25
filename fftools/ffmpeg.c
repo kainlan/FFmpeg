@@ -4159,7 +4159,7 @@ static int process_input(int file_index)
         ifile->last_ts = av_rescale_q(pkt->dts, ist->st->time_base, AV_TIME_BASE_Q);
 	
 	 if (force_dts_monotonicity &&
-        (pkt.pts != AV_NOPTS_VALUE || pkt.dts != AV_NOPTS_VALUE) &&
+        (pkt->pts != AV_NOPTS_VALUE || pkt->dts != AV_NOPTS_VALUE) &&
         (ist->dec_ctx->codec_type == AVMEDIA_TYPE_VIDEO || ist->dec_ctx->codec_type == AVMEDIA_TYPE_AUDIO)
     ) {
         int64_t ff_pts_error = 0;
@@ -4167,30 +4167,30 @@ static int process_input(int file_index)
         int64_t ff_dts_threshold = av_rescale_q(dts_monotonicity_threshold, AV_TIME_BASE_Q, ist->st->time_base);
 
         // adjust the incoming packet by the accumulated monotonicity error
-        if (pkt.pts != AV_NOPTS_VALUE) {
-            pkt.pts += ifile->ff_timestamp_monotonicity_offset;
+        if (pkt->pts != AV_NOPTS_VALUE) {
+            pkt->pts += ifile->ff_timestamp_monotonicity_offset;
             if (ist->next_pts != AV_NOPTS_VALUE) {
-                ff_pts_error = av_rescale_q(ist->next_pts, AV_TIME_BASE_Q, ist->st->time_base) - pkt.pts;
+                ff_pts_error = av_rescale_q(ist->next_pts, AV_TIME_BASE_Q, ist->st->time_base) - pkt->pts;
             }
         }
-        if (pkt.dts != AV_NOPTS_VALUE) {
-            pkt.dts += ifile->ff_timestamp_monotonicity_offset;
+        if (pkt->dts != AV_NOPTS_VALUE) {
+            pkt->dts += ifile->ff_timestamp_monotonicity_offset;
             if (ist->next_dts != AV_NOPTS_VALUE) {
-                ff_dts_error = av_rescale_q(ist->next_dts, AV_TIME_BASE_Q, ist->st->time_base) - pkt.dts;
+                ff_dts_error = av_rescale_q(ist->next_dts, AV_TIME_BASE_Q, ist->st->time_base) - pkt->dts;
             }
         }
 
         av_log(is, AV_LOG_DEBUG, "dts_error: %d, pts_error: %d, threshold: %d\n", ff_dts_error, ff_pts_error, ff_dts_threshold);
 
         if(ff_dts_error > ff_dts_threshold || ff_dts_error < (-ff_dts_threshold) || ff_pts_error < (-ff_dts_threshold)) {
-            if(pkt.dts == AV_NOPTS_VALUE /*  || ist->next_dts != AV_NOPTS_VALUE */ ) {
-                pkt.pts += ff_pts_error;
+            if(pkt->dts == AV_NOPTS_VALUE /*  || ist->next_dts != AV_NOPTS_VALUE */ ) {
+                pkt->pts += ff_pts_error;
                 ifile->ff_timestamp_monotonicity_offset += ff_pts_error;
                 av_log(is, AV_LOG_WARNING, "Incoming PTS error %"PRId64", offsetting subsequent timestamps by %"PRId64" to correct\n", ff_pts_error, ifile->ff_timestamp_monotonicity_offset);
             }
             else {
-                pkt.pts += ff_dts_error;
-                pkt.dts += ff_dts_error;
+                pkt->pts += ff_dts_error;
+                pkt->dts += ff_dts_error;
                 ifile->ff_timestamp_monotonicity_offset += ff_dts_error;
                 av_log(is, AV_LOG_WARNING, "Incoming DTS error %"PRId64", offsetting subsequent timestamps by %"PRId64" to correct\n", ff_dts_error, ifile->ff_timestamp_monotonicity_offset);
             }
