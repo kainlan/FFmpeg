@@ -78,15 +78,15 @@ prepare_extra_common() {
     popd
 
     # ZIMG
-    pushd ${SOURCE_DIR}
-    git clone --depth=1 https://github.com/sekrit-twc/zimg
-    pushd zimg
-    ./autogen.sh
-    ./configure --prefix=${TARGET_DIR} ${CROSS_OPT}
-    make -j $(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/zimg
-    echo "zimg${TARGET_DIR}/lib/libzimg.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
-    popd
-    popd
+    # pushd ${SOURCE_DIR}
+    # git clone --depth=1 https://github.com/sekrit-twc/zimg
+    # pushd zimg
+    # ./autogen.sh
+    # ./configure --prefix=${TARGET_DIR} ${CROSS_OPT}
+    # make -j $(nproc) && make install && make install DESTDIR=${SOURCE_DIR}/zimg
+    # echo "zimg${TARGET_DIR}/lib/libzimg.so* usr/lib/ffmpeg/lib" >> ${DPKG_INSTALL_LIST}
+    # popd
+    # popd
 
     # DAV1D
     pushd ${SOURCE_DIR}
