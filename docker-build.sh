@@ -521,14 +521,14 @@ pushd ${SOURCE_DIR}
 yes | mk-build-deps -i ${DEP_ARCH_OPT}
 dpkg-buildpackage -b -rfakeroot -us -uc ${BUILD_ARCH_OPT}
 
-apt-get -y install libargtable2-dev libavformat-dev libsdl1.2-dev
-mkdir comskipsrc
-cd comskipsrc 
-git clone -b kainlan-comskip https://github.com/kainlan/Comskip
-cd Comskip
-./autogen.sh
-PKG_CONFIG_PATH="/usr/lib/ffmpeg/lib" ./configure
-make
+# apt-get -y install libargtable2-dev libavformat-dev libsdl1.2-dev
+# mkdir comskipsrc
+# cd comskipsrc 
+# git clone -b kainlan-comskip https://github.com/kainlan/Comskip
+# cd Comskip
+# ./autogen.sh
+# PKG_CONFIG_PATH="/usr/lib/ffmpeg/lib" ./configure
+# make
 
 
 popd
