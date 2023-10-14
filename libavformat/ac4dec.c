@@ -38,7 +38,7 @@ static int ac4_probe(const AVProbeData *p)
              buf[1] == 0x41)) {
             size = (buf[2] << 8) | buf[3];
             if (size == 0xFFFF)
-                size = 3 + (buf[4] << 16) | (buf[5] << 8) | buf[6];
+                size = 3 + ((buf[4] << 16) | (buf[5] << 8) | buf[6]);
             size += 4;
             if (buf[1] == 0x41)
                 size += 2;
@@ -77,7 +77,7 @@ static int ac4_read_packet(AVFormatContext *s, AVPacket *pkt)
     if (avio_feof(s->pb))
         return AVERROR_EOF;
 
-    pos   = avio_tell(s->pb);
+    pos  = avio_tell(s->pb);
     sync = avio_rb16(pb);
     size = avio_rb16(pb);
     if (size == 0xffff)
@@ -93,7 +93,7 @@ static int ac4_read_packet(AVFormatContext *s, AVPacket *pkt)
     return ret;
 }
 
-AVInputFormat ff_ac4_demuxer = {
+const AVInputFormat ff_ac4_demuxer = {
     .name           = "ac4",
     .long_name      = NULL_IF_CONFIG_SMALL("raw AC-4"),
     .read_probe     = ac4_probe,
@@ -102,3 +102,4 @@ AVInputFormat ff_ac4_demuxer = {
     .flags          = AVFMT_GENERIC_INDEX,
     .extensions     = "ac4",
 };
+

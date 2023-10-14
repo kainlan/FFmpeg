@@ -21,7 +21,7 @@
 
 #include "avcodec.h"
 #include "codec_internal.h"
-#include "internal.h"
+#include "decode.h"
 #include "libavutil/opt.h"
 #include "librsvg-2.0/librsvg/rsvg.h"
 
@@ -73,7 +73,7 @@ static int librsvg_decode_frame(AVCodecContext *avctx, AVFrame *frame,
     if ((ret = ff_get_buffer(avctx, frame, 0)))
         return ret;
     frame->pict_type = AV_PICTURE_TYPE_I;
-    frame->key_frame = 1;
+    frame->flags |= AV_FRAME_FLAG_KEY;
 
     image = cairo_image_surface_create_for_data(frame->data[0], CAIRO_FORMAT_ARGB32,
                                                 frame->width, frame->height,
@@ -120,7 +120,7 @@ static const AVClass librsvg_decoder_class = {
 
 const FFCodec ff_librsvg_decoder = {
     .p.name         = "librsvg",
-    .p.long_name    = NULL_IF_CONFIG_SMALL("Librsvg rasterizer"),
+    CODEC_LONG_NAME("Librsvg rasterizer"),
     .p.priv_class   = &librsvg_decoder_class,
     .p.type         = AVMEDIA_TYPE_VIDEO,
     .p.id           = AV_CODEC_ID_SVG,

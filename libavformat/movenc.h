@@ -62,7 +62,7 @@ typedef struct MOVIentry {
 } MOVIentry;
 
 typedef struct HintSample {
-    uint8_t *data;
+    const uint8_t *data;
     int size;
     int sample_number;
     int offset;
@@ -246,9 +246,10 @@ typedef struct MOVMuxContext {
     int empty_hdlr_name;
     int movie_timescale;
 
-    int64_t avif_extent_pos;
-    int avif_extent_length;
+    int64_t avif_extent_pos[2];  // index 0 is YUV and 1 is Alpha.
+    int avif_extent_length[2];   // index 0 is YUV and 1 is Alpha.
     int is_animated_avif;
+    int avif_loop_count;
 } MOVMuxContext;
 
 #define FF_MOV_FLAG_RTP_HINT              (1 <<  0)
