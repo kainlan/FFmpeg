@@ -583,137 +583,137 @@ static av_cold int ac4_decode_init(AVCodecContext *avctx)
 
     avctx->sample_fmt = AV_SAMPLE_FMT_FLTP;
 
-    INIT_VLC_STATIC(&channel_mode_vlc, 9, sizeof(channel_mode_bits),
+    VLC_INIT_STATIC(&channel_mode_vlc, 9, sizeof(channel_mode_bits),
                     channel_mode_bits, 1, 1, channel_mode_codes, 2, 2, 512);
-    INIT_VLC_STATIC(&bitrate_indicator_vlc, 5, sizeof(bitrate_indicator_bits),
+    VLC_INIT_STATIC(&bitrate_indicator_vlc, 5, sizeof(bitrate_indicator_bits),
                     bitrate_indicator_bits, 1, 1, bitrate_indicator_codes, 1, 1, 32);
-    INIT_VLC_STATIC(&scale_factors_vlc, 9, sizeof(scale_factors_bits),
+    VLC_INIT_STATIC(&scale_factors_vlc, 9, sizeof(scale_factors_bits),
                     scale_factors_bits, 1, 1, scale_factors_codes, 1, 1, 850);
-    INIT_VLC_STATIC(&snf_vlc, 6, sizeof(snf_bits),
+    VLC_INIT_STATIC(&snf_vlc, 6, sizeof(snf_bits),
                     snf_bits, 1, 1, snf_codes, 1, 1, 70);
 
-    INIT_VLC_STATIC(&asf_codebook_vlc[0], 9, sizeof(asf_codebook_1_bits),
+    VLC_INIT_STATIC(&asf_codebook_vlc[0], 9, sizeof(asf_codebook_1_bits),
                     asf_codebook_1_bits, 1, 1, asf_codebook_1_codes, 1, 1, 542);
-    INIT_VLC_STATIC(&asf_codebook_vlc[1], 9, sizeof(asf_codebook_2_bits),
+    VLC_INIT_STATIC(&asf_codebook_vlc[1], 9, sizeof(asf_codebook_2_bits),
                     asf_codebook_2_bits, 1, 1, asf_codebook_2_codes, 1, 1, 512);
-    INIT_VLC_STATIC(&asf_codebook_vlc[2], 9, sizeof(asf_codebook_3_bits),
+    VLC_INIT_STATIC(&asf_codebook_vlc[2], 9, sizeof(asf_codebook_3_bits),
                     asf_codebook_3_bits, 1, 1, asf_codebook_3_codes, 1, 1, 612);
-    INIT_VLC_STATIC(&asf_codebook_vlc[3], 9, sizeof(asf_codebook_4_bits),
+    VLC_INIT_STATIC(&asf_codebook_vlc[3], 9, sizeof(asf_codebook_4_bits),
                     asf_codebook_4_bits, 1, 1, asf_codebook_4_codes, 1, 1, 544);
-    INIT_VLC_STATIC(&asf_codebook_vlc[4], 9, sizeof(asf_codebook_5_bits),
+    VLC_INIT_STATIC(&asf_codebook_vlc[4], 9, sizeof(asf_codebook_5_bits),
                     asf_codebook_5_bits, 1, 1, asf_codebook_5_codes, 1, 1, 576);
-    INIT_VLC_STATIC(&asf_codebook_vlc[5], 9, sizeof(asf_codebook_6_bits),
+    VLC_INIT_STATIC(&asf_codebook_vlc[5], 9, sizeof(asf_codebook_6_bits),
                     asf_codebook_6_bits, 1, 1, asf_codebook_6_codes, 1, 1, 546);
-    INIT_VLC_STATIC(&asf_codebook_vlc[6], 9, sizeof(asf_codebook_7_bits),
+    VLC_INIT_STATIC(&asf_codebook_vlc[6], 9, sizeof(asf_codebook_7_bits),
                     asf_codebook_7_bits, 1, 1, asf_codebook_7_codes, 1, 1, 542);
-    INIT_VLC_STATIC(&asf_codebook_vlc[7], 9, sizeof(asf_codebook_8_bits),
+    VLC_INIT_STATIC(&asf_codebook_vlc[7], 9, sizeof(asf_codebook_8_bits),
                     asf_codebook_8_bits, 1, 1, asf_codebook_8_codes, 1, 1, 522);
-    INIT_VLC_STATIC(&asf_codebook_vlc[8], 9, sizeof(asf_codebook_9_bits),
+    VLC_INIT_STATIC(&asf_codebook_vlc[8], 9, sizeof(asf_codebook_9_bits),
                     asf_codebook_9_bits, 1, 1, asf_codebook_9_codes, 1, 1, 670);
-    INIT_VLC_STATIC(&asf_codebook_vlc[9], 9, sizeof(asf_codebook_10_bits),
+    VLC_INIT_STATIC(&asf_codebook_vlc[9], 9, sizeof(asf_codebook_10_bits),
                     asf_codebook_10_bits, 1, 1, asf_codebook_10_codes, 1, 1, 604);
-    INIT_VLC_STATIC(&asf_codebook_vlc[10], 9, sizeof(asf_codebook_11_bits),
+    VLC_INIT_STATIC(&asf_codebook_vlc[10], 9, sizeof(asf_codebook_11_bits),
                     asf_codebook_11_bits, 1, 1, asf_codebook_11_codes, 1, 1, 674);
 
-    INIT_VLC_STATIC(&aspx_int_class_vlc, 5, sizeof(aspx_int_class_bits),
+    VLC_INIT_STATIC(&aspx_int_class_vlc, 5, sizeof(aspx_int_class_bits),
                     aspx_int_class_bits, 1, 1, aspx_int_class_codes, 1, 1, 32);
 
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[0][0][0], 9, sizeof(aspx_hcb_env_level_15_f0_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[0][0][0], 9, sizeof(aspx_hcb_env_level_15_f0_bits),
                     aspx_hcb_env_level_15_f0_bits, 1, 1, aspx_hcb_env_level_15_f0_codes, 4, 4, 1024);
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[0][0][1], 9, sizeof(aspx_hcb_env_level_15_df_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[0][0][1], 9, sizeof(aspx_hcb_env_level_15_df_bits),
                     aspx_hcb_env_level_15_df_bits, 1, 1, aspx_hcb_env_level_15_df_codes, 4, 4, 1888);
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[0][0][2], 9, sizeof(aspx_hcb_env_level_15_dt_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[0][0][2], 9, sizeof(aspx_hcb_env_level_15_dt_bits),
                     aspx_hcb_env_level_15_dt_bits, 1, 1, aspx_hcb_env_level_15_dt_codes, 4, 4, 1368);
 
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[0][1][0], 9, sizeof(aspx_hcb_env_level_30_f0_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[0][1][0], 9, sizeof(aspx_hcb_env_level_30_f0_bits),
                     aspx_hcb_env_level_30_f0_bits, 1, 1, aspx_hcb_env_level_30_f0_codes, 4, 4, 772);
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[0][1][1], 9, sizeof(aspx_hcb_env_level_30_df_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[0][1][1], 9, sizeof(aspx_hcb_env_level_30_df_bits),
                     aspx_hcb_env_level_30_df_bits, 1, 1, aspx_hcb_env_level_30_df_codes, 4, 4, 1624);
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[0][1][2], 9, sizeof(aspx_hcb_env_level_30_dt_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[0][1][2], 9, sizeof(aspx_hcb_env_level_30_dt_bits),
                     aspx_hcb_env_level_30_dt_bits, 1, 1, aspx_hcb_env_level_30_dt_codes, 4, 4, 1598);
 
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[1][0][0], 9, sizeof(aspx_hcb_env_balance_15_f0_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[1][0][0], 9, sizeof(aspx_hcb_env_balance_15_f0_bits),
                     aspx_hcb_env_balance_15_f0_bits, 1, 1, aspx_hcb_env_balance_15_f0_codes, 4, 4, 644);
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[1][0][1], 9, sizeof(aspx_hcb_env_balance_15_df_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[1][0][1], 9, sizeof(aspx_hcb_env_balance_15_df_bits),
                     aspx_hcb_env_balance_15_df_bits, 1, 1, aspx_hcb_env_balance_15_df_codes, 4, 4, 1056);
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[1][0][2], 9, sizeof(aspx_hcb_env_balance_15_dt_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[1][0][2], 9, sizeof(aspx_hcb_env_balance_15_dt_bits),
                     aspx_hcb_env_balance_15_dt_bits, 1, 1, aspx_hcb_env_balance_15_dt_codes, 4, 4, 616);
 
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[1][1][0], 9, sizeof(aspx_hcb_env_balance_30_f0_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[1][1][0], 9, sizeof(aspx_hcb_env_balance_30_f0_bits),
                     aspx_hcb_env_balance_30_f0_bits, 1, 1, aspx_hcb_env_balance_30_f0_codes, 2, 2, 520);
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[1][1][1], 9, sizeof(aspx_hcb_env_balance_30_df_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[1][1][1], 9, sizeof(aspx_hcb_env_balance_30_df_bits),
                     aspx_hcb_env_balance_30_df_bits, 1, 1, aspx_hcb_env_balance_30_df_codes, 4, 4, 768);
-    INIT_VLC_STATIC(&aspx_codebook_signal_vlc[1][1][2], 9, sizeof(aspx_hcb_env_balance_30_dt_bits),
+    VLC_INIT_STATIC(&aspx_codebook_signal_vlc[1][1][2], 9, sizeof(aspx_hcb_env_balance_30_dt_bits),
                     aspx_hcb_env_balance_30_dt_bits, 1, 1, aspx_hcb_env_balance_30_dt_codes, 2, 2, 576);
 
-    INIT_VLC_STATIC(&aspx_codebook_noise_vlc[0][0], 9, sizeof(aspx_hcb_noise_level_f0_bits),
+    VLC_INIT_STATIC(&aspx_codebook_noise_vlc[0][0], 9, sizeof(aspx_hcb_noise_level_f0_bits),
                     aspx_hcb_noise_level_f0_bits, 1, 1, aspx_hcb_noise_level_f0_codes, 2, 2, 672);
-    INIT_VLC_STATIC(&aspx_codebook_noise_vlc[0][1], 9, sizeof(aspx_hcb_noise_level_df_bits),
+    VLC_INIT_STATIC(&aspx_codebook_noise_vlc[0][1], 9, sizeof(aspx_hcb_noise_level_df_bits),
                     aspx_hcb_noise_level_df_bits, 1, 1, aspx_hcb_noise_level_df_codes, 4, 4, 1024);
-    INIT_VLC_STATIC(&aspx_codebook_noise_vlc[0][2], 9, sizeof(aspx_hcb_noise_level_dt_bits),
+    VLC_INIT_STATIC(&aspx_codebook_noise_vlc[0][2], 9, sizeof(aspx_hcb_noise_level_dt_bits),
                     aspx_hcb_noise_level_dt_bits, 1, 1, aspx_hcb_noise_level_dt_codes, 2, 2, 768);
 
-    INIT_VLC_STATIC(&aspx_codebook_noise_vlc[1][0], 9, sizeof(aspx_hcb_noise_balance_f0_bits),
+    VLC_INIT_STATIC(&aspx_codebook_noise_vlc[1][0], 9, sizeof(aspx_hcb_noise_balance_f0_bits),
                     aspx_hcb_noise_balance_f0_bits, 1, 1, aspx_hcb_noise_balance_f0_codes, 2, 2, 516);
-    INIT_VLC_STATIC(&aspx_codebook_noise_vlc[1][1], 9, sizeof(aspx_hcb_noise_balance_df_bits),
+    VLC_INIT_STATIC(&aspx_codebook_noise_vlc[1][1], 9, sizeof(aspx_hcb_noise_balance_df_bits),
                     aspx_hcb_noise_balance_df_bits, 1, 1, aspx_hcb_noise_balance_df_codes, 2, 2, 536);
-    INIT_VLC_STATIC(&aspx_codebook_noise_vlc[1][2], 9, sizeof(aspx_hcb_noise_balance_dt_bits),
+    VLC_INIT_STATIC(&aspx_codebook_noise_vlc[1][2], 9, sizeof(aspx_hcb_noise_balance_dt_bits),
                     aspx_hcb_noise_balance_dt_bits, 1, 1, aspx_hcb_noise_balance_dt_codes, 2, 2, 530);
 
-    INIT_VLC_STATIC(&acpl_codebook_vlc[0][1][0], 9, sizeof(acpl_hcb_alpha_coarse_f0_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[0][1][0], 9, sizeof(acpl_hcb_alpha_coarse_f0_bits),
                     acpl_hcb_alpha_coarse_f0_bits, 1, 1, acpl_hcb_alpha_coarse_f0_codes, 2, 2, 516);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[0][1][1], 9, sizeof(acpl_hcb_alpha_coarse_df_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[0][1][1], 9, sizeof(acpl_hcb_alpha_coarse_df_bits),
                     acpl_hcb_alpha_coarse_df_bits, 1, 1, acpl_hcb_alpha_coarse_df_codes, 4, 4, 1032);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[0][1][2], 9, sizeof(acpl_hcb_alpha_coarse_dt_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[0][1][2], 9, sizeof(acpl_hcb_alpha_coarse_dt_bits),
                     acpl_hcb_alpha_coarse_dt_bits, 1, 1, acpl_hcb_alpha_coarse_dt_codes, 4, 4, 642);
 
-    INIT_VLC_STATIC(&acpl_codebook_vlc[0][0][0], 9, sizeof(acpl_hcb_alpha_fine_f0_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[0][0][0], 9, sizeof(acpl_hcb_alpha_fine_f0_bits),
                     acpl_hcb_alpha_fine_f0_bits, 1, 1, acpl_hcb_alpha_fine_f0_codes, 2, 2, 530);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[0][0][1], 9, sizeof(acpl_hcb_alpha_fine_df_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[0][0][1], 9, sizeof(acpl_hcb_alpha_fine_df_bits),
                     acpl_hcb_alpha_fine_df_bits, 1, 1, acpl_hcb_alpha_fine_df_codes, 4, 4, 1176);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[0][0][2], 9, sizeof(acpl_hcb_alpha_fine_dt_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[0][0][2], 9, sizeof(acpl_hcb_alpha_fine_dt_bits),
                     acpl_hcb_alpha_fine_dt_bits, 1, 1, acpl_hcb_alpha_fine_dt_codes, 4, 4, 1158);
 
-    INIT_VLC_STATIC(&acpl_codebook_vlc[1][1][0], 9, sizeof(acpl_hcb_beta_coarse_f0_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[1][1][0], 9, sizeof(acpl_hcb_beta_coarse_f0_bits),
                     acpl_hcb_beta_coarse_f0_bits, 1, 1, acpl_hcb_beta_coarse_f0_codes, 1, 1, 512);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[1][1][1], 9, sizeof(acpl_hcb_beta_coarse_df_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[1][1][1], 9, sizeof(acpl_hcb_beta_coarse_df_bits),
                     acpl_hcb_beta_coarse_df_bits, 1, 1, acpl_hcb_beta_coarse_df_codes, 1, 1, 512);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[1][1][2], 9, sizeof(acpl_hcb_beta_coarse_dt_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[1][1][2], 9, sizeof(acpl_hcb_beta_coarse_dt_bits),
                     acpl_hcb_beta_coarse_dt_bits, 1, 1, acpl_hcb_beta_coarse_dt_codes, 1, 1, 512);
 
-    INIT_VLC_STATIC(&acpl_codebook_vlc[1][0][0], 9, sizeof(acpl_hcb_beta_fine_f0_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[1][0][0], 9, sizeof(acpl_hcb_beta_fine_f0_bits),
                     acpl_hcb_beta_fine_f0_bits, 1, 1, acpl_hcb_beta_fine_f0_codes, 1, 1, 512);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[1][0][1], 9, sizeof(acpl_hcb_beta_fine_df_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[1][0][1], 9, sizeof(acpl_hcb_beta_fine_df_bits),
                     acpl_hcb_beta_fine_df_bits, 1, 1, acpl_hcb_beta_fine_df_codes, 4, 4, 528);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[1][0][2], 9, sizeof(acpl_hcb_beta_fine_dt_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[1][0][2], 9, sizeof(acpl_hcb_beta_fine_dt_bits),
                     acpl_hcb_beta_fine_dt_bits, 1, 1, acpl_hcb_beta_fine_dt_codes, 4, 4, 576);
 
-    INIT_VLC_STATIC(&acpl_codebook_vlc[2][1][0], 9, sizeof(acpl_hcb_beta3_coarse_f0_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[2][1][0], 9, sizeof(acpl_hcb_beta3_coarse_f0_bits),
                     acpl_hcb_beta3_coarse_f0_bits, 1, 1, acpl_hcb_beta3_coarse_f0_codes, 1, 1, 512);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[2][1][1], 9, sizeof(acpl_hcb_beta3_coarse_df_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[2][1][1], 9, sizeof(acpl_hcb_beta3_coarse_df_bits),
                     acpl_hcb_beta3_coarse_df_bits, 1, 1, acpl_hcb_beta3_coarse_df_codes, 4, 4, 528);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[2][1][2], 9, sizeof(acpl_hcb_beta3_coarse_dt_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[2][1][2], 9, sizeof(acpl_hcb_beta3_coarse_dt_bits),
                     acpl_hcb_beta3_coarse_dt_bits, 1, 1, acpl_hcb_beta3_coarse_dt_codes, 2, 2, 576);
 
-    INIT_VLC_STATIC(&acpl_codebook_vlc[2][0][0], 9, sizeof(acpl_hcb_beta3_fine_f0_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[2][0][0], 9, sizeof(acpl_hcb_beta3_fine_f0_bits),
                     acpl_hcb_beta3_fine_f0_bits, 1, 1, acpl_hcb_beta3_fine_f0_codes, 1, 1, 512);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[2][0][1], 9, sizeof(acpl_hcb_beta3_fine_df_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[2][0][1], 9, sizeof(acpl_hcb_beta3_fine_df_bits),
                     acpl_hcb_beta3_fine_df_bits, 1, 1, acpl_hcb_beta3_fine_df_codes, 4, 4, 580);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[2][0][2], 9, sizeof(acpl_hcb_beta3_fine_dt_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[2][0][2], 9, sizeof(acpl_hcb_beta3_fine_dt_bits),
                     acpl_hcb_beta3_fine_dt_bits, 1, 1, acpl_hcb_beta3_fine_dt_codes, 4, 4, 768);
 
-    INIT_VLC_STATIC(&acpl_codebook_vlc[3][1][0], 9, sizeof(acpl_hcb_gamma_coarse_f0_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[3][1][0], 9, sizeof(acpl_hcb_gamma_coarse_f0_bits),
                     acpl_hcb_gamma_coarse_f0_bits, 1, 1, acpl_hcb_gamma_coarse_f0_codes, 2, 2, 528);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[3][1][1], 9, sizeof(acpl_hcb_gamma_coarse_df_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[3][1][1], 9, sizeof(acpl_hcb_gamma_coarse_df_bits),
                     acpl_hcb_gamma_coarse_df_bits, 1, 1, acpl_hcb_gamma_coarse_df_codes, 4, 4, 644);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[3][1][2], 9, sizeof(acpl_hcb_gamma_coarse_dt_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[3][1][2], 9, sizeof(acpl_hcb_gamma_coarse_dt_bits),
                     acpl_hcb_gamma_coarse_dt_bits, 1, 1, acpl_hcb_gamma_coarse_dt_codes, 4, 4, 896);
 
-    INIT_VLC_STATIC(&acpl_codebook_vlc[3][0][0], 9, sizeof(acpl_hcb_gamma_fine_f0_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[3][0][0], 9, sizeof(acpl_hcb_gamma_fine_f0_bits),
                     acpl_hcb_gamma_fine_f0_bits, 1, 1, acpl_hcb_gamma_fine_f0_codes, 4, 4, 544);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[3][0][1], 9, sizeof(acpl_hcb_gamma_fine_df_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[3][0][1], 9, sizeof(acpl_hcb_gamma_fine_df_bits),
                     acpl_hcb_gamma_fine_df_bits, 1, 1, acpl_hcb_gamma_fine_df_codes, 4, 4, 1026);
-    INIT_VLC_STATIC(&acpl_codebook_vlc[3][0][2], 9, sizeof(acpl_hcb_gamma_fine_dt_bits),
+    VLC_INIT_STATIC(&acpl_codebook_vlc[3][0][2], 9, sizeof(acpl_hcb_gamma_fine_dt_bits),
                     acpl_hcb_gamma_fine_dt_bits, 1, 1, acpl_hcb_gamma_fine_dt_codes, 4, 4, 1792);
 
     for (int j = 0; j < 8; j++) {
@@ -727,7 +727,7 @@ static av_cold int ac4_decode_init(AVCodecContext *avctx)
             if ((ret = av_tx_init(&s->tx_ctx[j][i], &s->tx_fn[j][i], AV_TX_FLOAT_MDCT, 1, N_w, &scale, 0)))
                 return ret;
 
-            ff_kbd_window_init(s->kbd_window[j][i], alpha, N_w);
+            avpriv_kbd_window_init(s->kbd_window[j][i], alpha, N_w);
         }
     }
 
