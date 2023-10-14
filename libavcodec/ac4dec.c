@@ -5899,5 +5899,5 @@ const FFCodec ff_ac4_decoder = {
     .p.sample_fmts    = (const enum AVSampleFormat[]) { AV_SAMPLE_FMT_FLTP,
                                                       AV_SAMPLE_FMT_NONE },			  
     .p.priv_class     = &ac4_decoder_class,
-	.p.capabilities = AV_CODEC_CAP_DR1,
+	.p.capabilities = AV_CODEC_CAP_DR1 | AV_CODEC_CAP_CHANNEL_CONF,
 };
