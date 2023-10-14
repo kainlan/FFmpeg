@@ -5774,6 +5774,7 @@ static int ac4_decode_frame(AVCodecContext *avctx, AVFrame *frame,
                                     s->resampling_ratio.den,
                                     s->resampling_ratio.num);
     frame->nb_samples = s->frame_len_base;
+	av_log(s->avctx, AV_LOG_DEBUG, "ac4 ff_get_buffer channels %d sample_rate %d nb_samples: %d\n", avctx->channels, avctx->sample_rate, frame->nb_samples);
     if ((ret = ff_get_buffer(avctx, frame, 0)) < 0)
 	{
 		av_log(s->avctx, AV_LOG_ERROR, "ac4 ff_get_buffer failed: %d\n", ret);
@@ -5846,13 +5847,14 @@ static int ac4_decode_frame(AVCodecContext *avctx, AVFrame *frame,
     return avpkt->size;
 }
 
-static av_cold void ac4_flush(AVCodecContext *avctx)
+static void ac4_flush(AVCodecContext *avctx)
 {
     AC4DecodeContext *s = avctx->priv_data;
 
     s->have_iframe = 0;
     s->sequence_counter_prev = 0;
 }
+
 
 static av_cold int ac4_decode_end(AVCodecContext *avctx)
 {
@@ -5884,17 +5886,16 @@ static const AVClass ac4_decoder_class = {
 
 const FFCodec ff_ac4_decoder = {
     .p.name           = "ac4",
-    .p.long_name      = NULL_IF_CONFIG_SMALL("AC-4"),
+    CODEC_LONG_NAME("AC-4"),
     .p.type           = AVMEDIA_TYPE_AUDIO,
     .p.id             = AV_CODEC_ID_AC4,
-    .p.capabilities   = AV_CODEC_CAP_CHANNEL_CONF |
-						AV_CODEC_CAP_DR1,
-    .p.priv_class     = &ac4_decoder_class,
     .priv_data_size = sizeof (AC4DecodeContext),
     .init           = ac4_decode_init,
     .close          = ac4_decode_end,
-	FF_CODEC_DECODE_CB(ac4_decode_frame),
+    FF_CODEC_DECODE_CB(ac4_decode_frame),
     .flush          = ac4_flush,
     .p.sample_fmts    = (const enum AVSampleFormat[]) { AV_SAMPLE_FMT_FLTP,
-                                                      AV_SAMPLE_FMT_NONE },
+                                                      AV_SAMPLE_FMT_NONE },			  
+    .p.priv_class     = &ac4_decoder_class,
+	.caps_internal  = FF_CODEC_CAP_INIT_CLEANUP,
 };
