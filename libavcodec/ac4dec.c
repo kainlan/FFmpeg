@@ -5738,6 +5738,7 @@ static int ac4_decode_frame(AVCodecContext *avctx, AVFrame *frame,
     SubstreamInfo *ssinfo;
     int presentation;
     uint32_t header;
+	uint64_t mask;
 
     if (avpkt->size < 8) {
         av_log(s->avctx, AV_LOG_ERROR, "invalid packet size: %d\n", avpkt->size);
@@ -5767,8 +5768,9 @@ static int ac4_decode_frame(AVCodecContext *avctx, AVFrame *frame,
 
     presentation = FFMIN(s->target_presentation, FFMAX(0, s->nb_presentations - 1));
     ssinfo = s->version == 2 ? &s->ssgroup[0].ssinfo : &s->pinfo[presentation].ssinfo;
-    avctx->channels = channel_mode_nb_channels[ssinfo->channel_mode];
-    avctx->channel_layout = channel_mode_layouts[ssinfo->channel_mode];
+    mask = channel_mode_layouts[ssinfo->channel_mode];
+	av_channel_layout_uninit(&avctx->ch_layout);
+    av_channel_layout_from_mask(&avctx->ch_layout, mask);
     avctx->sample_rate = s->fs_index ? 48000 : 44100;
     avctx->sample_rate = av_rescale(avctx->sample_rate,
                                     s->resampling_ratio.den,
@@ -5897,5 +5899,5 @@ const FFCodec ff_ac4_decoder = {
     .p.sample_fmts    = (const enum AVSampleFormat[]) { AV_SAMPLE_FMT_FLTP,
                                                       AV_SAMPLE_FMT_NONE },			  
     .p.priv_class     = &ac4_decoder_class,
-	//.caps_internal  = FF_CODEC_CAP_INIT_CLEANUP,
+	.p.capabilities = AV_CODEC_CAP_DR1,
 };
