@@ -3134,7 +3134,10 @@ static int aspx_elements(AC4DecodeContext *s, Substream *ss, SubstreamChannel *s
     ssch->num_sbg_sig[0] = ssch->num_sbg_sig_lowres;
     ssch->num_sbg_sig[1] = ssch->num_sbg_sig_highres;
 
-    ssch->num_sbg_noise = FFMAX(1, floorf(ss->aspx_noise_sbg * log2f(ssch->sbz / (float)ssch->sbx) + 0.5));
+    if (ssch->sbx)
+        ssch->num_sbg_noise = FFMAX(1, floorf(ss->aspx_noise_sbg * log2f(ssch->sbz / (float)ssch->sbx) + 0.5));
+    else
+        ssch->num_sbg_noise = 0;
     if (ssch->num_sbg_noise > 5) {
         av_log(s->avctx, AV_LOG_ERROR, "invalid num sbg noise: %d\n", ssch->num_sbg_noise);
         return AVERROR_INVALIDDATA;
@@ -4013,18 +4016,21 @@ static int channel_element_5x(AC4DecodeContext *s, int lfe, int iframe)
         ss->coding_config = get_bits(gb, 2);
         av_log(s->avctx, AV_LOG_DEBUG, "coding_config: %d\n", ss->coding_config);
         switch (ss->coding_config) {
-        case 0:
+       case 0: {
+            int fl = 0, fr = 1, fc = 2, sl = 3, sr = 4;
             ss->mode_2ch = get_bits1(gb);
-            ret = two_channel_data(s, ss, &ss->ssch[0], &ss->ssch[1], 0);
+            av_log(s->avctx, AV_LOG_DEBUG, "2ch_mode: %d\n", ss->mode_2ch);
+            ret = two_channel_data(s, ss, &ss->ssch[fl], &ss->ssch[ss->mode_2ch ? sl : fr], 0);
             if (ret < 0)
                 return ret;
-            ret = two_channel_data(s, ss, &ss->ssch[2], &ss->ssch[3], 1);
+            ret = two_channel_data(s, ss, &ss->ssch[ss->mode_2ch ? fr : sl], &ss->ssch[sr], 1);
             if (ret < 0)
                 return ret;
-            ret = mono_data(s, ss, &ss->ssch[4], 0, iframe);
+            ret = mono_data(s, ss, &ss->ssch[fc], 0, iframe);
             if (ret < 0)
                 return ret;
             break;
+        }
         case 1:
             ret = three_channel_data(s, ss, &ss->ssch[0], &ss->ssch[1], &ss->ssch[2]);
             if (ret < 0)
@@ -4642,6 +4648,7 @@ static int m5channel_processing(AC4DecodeContext *s, Substream *ss)
         break;
     case CM_ASPX_ACPL_1:
     case CM_ASPX_ACPL_2:
+	case CM_ASPX_ACPL_3:
         switch (ss->coding_config) {
         case 0:
             if (ss->mdct_stereo_proc[0])
@@ -5760,12 +5767,12 @@ static int ac4_decode_frame(AVCodecContext *avctx, AVFrame *frame,
 
     presentation = FFMIN(s->target_presentation, FFMAX(0, s->nb_presentations - 1));
     ssinfo = s->version == 2 ? &s->ssgroup[0].ssinfo : &s->pinfo[presentation].ssinfo;
-    avctx->sample_rate = s->fs_index ? 48000 : 44100;
     avctx->channels = channel_mode_nb_channels[ssinfo->channel_mode];
     avctx->channel_layout = channel_mode_layouts[ssinfo->channel_mode];
-    frame->nb_samples = av_rescale(s->frame_len_base,
-                                   s->resampling_ratio.num,
-                                   s->resampling_ratio.den);
+    avctx->sample_rate = s->fs_index ? 48000 : 44100;
+    avctx->sample_rate = av_rescale(avctx->sample_rate,
+                                    s->resampling_ratio.den,
+                                    s->resampling_ratio.num);
     frame->nb_samples = s->frame_len_base;
     if ((ret = ff_get_buffer(avctx, frame, 0)) < 0)
 	{
