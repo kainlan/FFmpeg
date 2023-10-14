@@ -5722,11 +5722,10 @@ static void decode_channel(AC4DecodeContext *s, int ch, float *pcm)
     qmf_synthesis(s, ssch, pcm);
 }
 
-static int ac4_decode_frame(AVCodecContext *avctx, void *data,
+static int ac4_decode_frame(AVCodecContext *avctx, AVFrame *frame,
                             int *got_frame_ptr, AVPacket *avpkt)
 {
     AC4DecodeContext *s = avctx->priv_data;
-    AVFrame *frame = data;
     GetBitContext *gb = &s->gbc;
     int ret, start_offset = 0;
     SubstreamInfo *ssinfo;
@@ -5769,7 +5768,10 @@ static int ac4_decode_frame(AVCodecContext *avctx, void *data,
                                    s->resampling_ratio.den);
     frame->nb_samples = s->frame_len_base;
     if ((ret = ff_get_buffer(avctx, frame, 0)) < 0)
+	{
+		av_log(s->avctx, AV_LOG_ERROR, "ac4 ff_get_buffer failed: %d\n", ret);
         return ret;
+	}
 
     skip_bits_long(gb, s->payload_base * 8);
 
