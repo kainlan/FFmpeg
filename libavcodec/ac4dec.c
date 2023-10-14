@@ -40,6 +40,7 @@
 #include "internal.h"
 #include "kbdwin.h"
 #include "unary.h"
+#include "decode.h"
 
 /* Number of model bits */
 #define SSF_MODEL_BITS 15
